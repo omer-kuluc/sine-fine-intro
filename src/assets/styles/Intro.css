@@ -1,4 +1,3 @@
-/* ---- VARIABLES ---- */
 :root {
   --cream: #f5f0e8;
   --gold: #c9a84c;
@@ -10,7 +9,6 @@
   --text-mid: #4a3820;
 }
 
-/* ---- MOBİL KODLARI (Base) ---- */
 .intro-body {
   width: 100%;
   height: 100vh;
@@ -20,14 +18,12 @@
   position: relative;
 }
 
-/* Grain overlay */
 .intro-body::before {
   content: '';
   position: fixed;
   inset: 0;
   z-index: 1000;
   pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
   opacity: 0.4;
   mix-blend-mode: multiply;
 }
@@ -113,6 +109,13 @@
   color: var(--gold);
   text-shadow: 0 0 60px rgba(201, 168, 76, 0.3);
   clip-path: inset(0 50% 0 50%);
+  cursor: default;
+  transition: all 0.4s ease;
+}
+
+#choose-word:hover {
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 80px rgba(201, 168, 76, 0.5);
 }
 
 .portal-container {
@@ -122,6 +125,43 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.portal-container:hover {
+  transform: translateY(-5px) scale(1.05);
+}
+
+.portal-container::before {
+  content: '';
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.portal-container:hover::before {
+  opacity: 0.3;
+  transform: scale(1.2);
+}
+
+.portal-container::after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle, var(--gold-light) 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.portal-container:hover::after {
+  opacity: 0.15;
 }
 
 #portal-somnium {
@@ -130,10 +170,18 @@
   transform: translateY(-50%);
 }
 
+#portal-somnium:hover {
+  transform: translateY(-50%) translateX(5px) scale(1.05);
+}
+
 #portal-fabula {
   right: 4vw;
   top: 50%;
   transform: translateY(-50%);
+}
+
+#portal-fabula:hover {
+  transform: translateY(-50%) translateX(-5px) scale(1.05);
 }
 
 #portal-limen {
@@ -142,19 +190,8 @@
   transform: translateX(-50%);
 }
 
-
-@keyframes portalPulse {
-
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.4;
-  }
-
-  50% {
-    transform: scale(1.1);
-    opacity: 0.8;
-  }
+#portal-limen:hover {
+  transform: translateX(-50%) translateY(-5px) scale(1.05);
 }
 
 .portal-name {
@@ -163,6 +200,30 @@
   letter-spacing: 0.2em;
   color: var(--text-dark);
   clip-path: inset(0 0 100% 0);
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 8px 16px;
+}
+
+.portal-container:hover .portal-name {
+  color: var(--gold);
+  letter-spacing: 0.3em;
+}
+
+.portal-name::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 1px;
+  background: var(--gold);
+  transition: width 0.4s ease;
+}
+
+.portal-container:hover .portal-name::before {
+  width: 100%;
 }
 
 .sparkle {
@@ -172,6 +233,54 @@
   border-radius: 50%;
   background: var(--gold-light);
   opacity: 0;
+  box-shadow: 0 0 8px var(--gold-light);
+}
+
+.corner-ornament {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+}
+
+.corner-ornament svg {
+  width: 100%;
+  height: 100%;
+}
+
+#ornament-tl {
+  top: 20px;
+  left: 20px;
+}
+
+#ornament-tr {
+  top: 20px;
+  right: 20px;
+  transform: scaleX(-1);
+}
+
+#ornament-bl {
+  bottom: 20px;
+  left: 20px;
+  transform: scaleY(-1);
+}
+
+#ornament-br {
+  bottom: 20px;
+  right: 20px;
+  transform: scale(-1);
+}
+
+.floating-symbol {
+  position: absolute;
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  color: var(--gold);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 8;
 }
 
 #footer-text {
@@ -201,11 +310,7 @@
   stroke-linejoin: round;
 }
 
-/* ---- TABLET KODLARI ---- */
 @media(width>=768px) {
-
-
-
   .portal-name {
     font-size: 12px;
   }
@@ -213,9 +318,17 @@
   #footer-text p {
     font-size: 9px;
   }
+
+  .corner-ornament {
+    width: 120px;
+    height: 120px;
+  }
+
+  .floating-symbol {
+    font-size: 16px;
+  }
 }
 
-/* ---- DESKTOP KODLARI ---- */
 @media(width>=1280px) {
   #portal-somnium {
     left: 8vw;
@@ -233,4 +346,12 @@
     font-size: 13px;
   }
 
+  .corner-ornament {
+    width: 140px;
+    height: 140px;
+  }
+
+  .floating-symbol {
+    font-size: 18px;
+  }
 }

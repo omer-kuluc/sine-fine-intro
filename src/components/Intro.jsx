@@ -1,16 +1,16 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
 const Intro = () => {
   const stageRef = useRef(null);
 
   useEffect(() => {
-    // Sparkles Generation
     const sparklesContainer = document.getElementById('sparkles-container');
     const sparklePositions = [
       [15, 20], [25, 15], [8, 50], [18, 70], [30, 85], [85, 15], [92, 30], [80, 65], [90, 75], [70, 90],
       [45, 5], [55, 95], [5, 45], [95, 55], [35, 92], [65, 8], [12, 35], [88, 45], [42, 78], [58, 22],
-      [22, 60], [78, 40], [50, 12], [50, 88], [38, 38], [62, 62]
+      [22, 60], [78, 40], [50, 12], [50, 88], [38, 38], [62, 62], [10, 10], [90, 10], [10, 90], [90, 90],
+      [30, 30], [70, 70], [20, 80], [80, 20], [50, 50]
     ];
 
     if (sparklesContainer.innerHTML === '') {
@@ -26,12 +26,10 @@ const Intro = () => {
       });
     }
 
-    // ---- GSAP Timeline ----
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
     const branches = document.querySelectorAll('.branch-path');
 
-    // SVG Paths Initial State
     branches.forEach(p => {
       const len = p.getTotalLength();
       gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
@@ -40,8 +38,9 @@ const Intro = () => {
     gsap.set('#center-ring', { opacity: 0, scale: 0, transformOrigin: '720px 450px' });
     gsap.set('#center-ring2', { opacity: 0, scale: 0, transformOrigin: '720px 450px' });
     gsap.set('#leaf-accents', { opacity: 0 });
+    gsap.set('.corner-ornament', { opacity: 0, scale: 0.8 });
+    gsap.set('.floating-symbol', { opacity: 0, y: 20 });
 
-    // Animation Sequence
     tl.to('#center-ring', { opacity: 0.5, scale: 1, duration: 0.8, ease: 'back.out(1.5)' }, 0)
       .to('#center-ring2', { opacity: 0.35, scale: 1, duration: 1, ease: 'back.out(1.2)' }, 0.2)
       .to([branches[0], branches[4], branches[9], branches[15]], {
@@ -57,10 +56,24 @@ const Intro = () => {
         strokeDashoffset: 0, duration: 1.0, ease: 'power2.inOut', stagger: 0.1
       }, 1.2)
       .to('#leaf-accents', { opacity: 1, duration: 0.5 }, 2.4)
+      .to('.corner-ornament', {
+        opacity: 0.3,
+        scale: 1,
+        duration: 0.8,
+        stagger: { amount: 0.4, from: 'edges' },
+        ease: 'back.out(1.5)'
+      }, 2.2)
       .to('#brand-header', { clipPath: 'inset(0 0% 0 0)', duration: 0.9, ease: 'power3.inOut' }, 2.0)
       .to('#epigraph', { clipPath: 'inset(0 0 0% 0)', duration: 1.0, ease: 'power3.out' }, 2.6)
       .to('#choose-word', { clipPath: 'inset(0 0% 0 0%)', duration: 0.9, ease: 'back.out(1.2)' }, 3.2)
       .to('.portal-name', { clipPath: 'inset(0 0 0% 0)', duration: 0.6, ease: 'power3.out', stagger: 0.1 }, 4.4)
+      .to('.floating-symbol', {
+        opacity: 0.4,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: 'power2.out'
+      }, 4.0)
       .to('.sparkle', {
         opacity: () => 0.3 + Math.random() * 0.6,
         y: () => -10 + Math.random() * -20,
@@ -69,10 +82,56 @@ const Intro = () => {
       }, 3.8)
       .to('#footer-text', { clipPath: 'inset(0 0% 0 0)', duration: 0.7, ease: 'power3.out' }, 5.0);
 
-    // Continuous breathing
     gsap.to('#choose-word', {
       textShadow: '0 0 80px rgba(201,168,76,0.6)',
       duration: 2, ease: 'sine.inOut', repeat: -1, yoyo: true
+    });
+
+    gsap.to('#center-ring', {
+      scale: 1.1,
+      opacity: 0.6,
+      duration: 3,
+      ease: 'sine.inOut',
+      repeat: -1,
+      yoyo: true
+    });
+
+    gsap.to('#center-ring2', {
+      rotation: 360,
+      duration: 60,
+      ease: 'none',
+      repeat: -1
+    });
+
+    gsap.to('.floating-symbol', {
+      y: '-=10',
+      duration: 2,
+      ease: 'sine.inOut',
+      repeat: -1,
+      yoyo: true,
+      stagger: {
+        amount: 1,
+        from: 'random'
+      }
+    });
+
+    const portals = document.querySelectorAll('.portal-container');
+    portals.forEach(portal => {
+      portal.addEventListener('mouseenter', () => {
+        gsap.to(portal.querySelector('.portal-name'), {
+          scale: 1.1,
+          duration: 0.3,
+          ease: 'back.out(2)'
+        });
+      });
+
+      portal.addEventListener('mouseleave', () => {
+        gsap.to(portal.querySelector('.portal-name'), {
+          scale: 1,
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      });
     });
 
   }, []);
@@ -80,7 +139,6 @@ const Intro = () => {
   return (
     <div className="intro-body">
       <div id="stage" ref={stageRef}>
-        {/* SVG Branch Lines */}
         <svg id="branch-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid meet">
           <defs>
             <filter id="glow">
@@ -142,21 +200,56 @@ const Intro = () => {
           </g>
         </svg>
 
-        {/* Brand Header */}
+        <div className="corner-ornament" id="ornament-tl">
+          <svg viewBox="0 0 100 100" fill="none">
+            <path d="M10 10 L30 10 L30 12 L12 12 L12 30 L10 30 Z" fill="var(--gold)" opacity="0.4" />
+            <path d="M15 15 L35 15 L35 17 L17 17 L17 35 L15 35 Z" fill="var(--gold)" opacity="0.3" />
+            <circle cx="20" cy="20" r="3" fill="var(--gold)" opacity="0.5" />
+          </svg>
+        </div>
+
+        <div className="corner-ornament" id="ornament-tr">
+          <svg viewBox="0 0 100 100" fill="none">
+            <path d="M10 10 L30 10 L30 12 L12 12 L12 30 L10 30 Z" fill="var(--gold)" opacity="0.4" />
+            <path d="M15 15 L35 15 L35 17 L17 17 L17 35 L15 35 Z" fill="var(--gold)" opacity="0.3" />
+            <circle cx="20" cy="20" r="3" fill="var(--gold)" opacity="0.5" />
+          </svg>
+        </div>
+
+        <div className="corner-ornament" id="ornament-bl">
+          <svg viewBox="0 0 100 100" fill="none">
+            <path d="M10 10 L30 10 L30 12 L12 12 L12 30 L10 30 Z" fill="var(--gold)" opacity="0.4" />
+            <path d="M15 15 L35 15 L35 17 L17 17 L17 35 L15 35 Z" fill="var(--gold)" opacity="0.3" />
+            <circle cx="20" cy="20" r="3" fill="var(--gold)" opacity="0.5" />
+          </svg>
+        </div>
+
+        <div className="corner-ornament" id="ornament-br">
+          <svg viewBox="0 0 100 100" fill="none">
+            <path d="M10 10 L30 10 L30 12 L12 12 L12 30 L10 30 Z" fill="var(--gold)" opacity="0.4" />
+            <path d="M15 15 L35 15 L35 17 L17 17 L17 35 L15 35 Z" fill="var(--gold)" opacity="0.3" />
+            <circle cx="20" cy="20" r="3" fill="var(--gold)" opacity="0.5" />
+          </svg>
+        </div>
+
+        <div className="floating-symbol" style={{ left: '15%', top: '25%' }}>∞</div>
+        <div className="floating-symbol" style={{ right: '15%', top: '25%' }}>✦</div>
+        <div className="floating-symbol" style={{ left: '15%', bottom: '25%' }}>◊</div>
+        <div className="floating-symbol" style={{ right: '15%', bottom: '25%' }}>※</div>
+        <div className="floating-symbol" style={{ left: '50%', top: '15%', transform: 'translateX(-50%)' }}>✧</div>
+
         <div id="brand-header">
           <div className="label">Est. MMXXIV &nbsp;·&nbsp; A World Beyond Limits</div>
           <h1>SINE FINE</h1>
         </div>
 
-        {/* Epigraph */}
         <div id="epigraph">
           <p>Every choice is a door.<br />Every door, a labyrinth.<br />Every labyrinth, a universe waiting to be born.</p>
           <div className="attr">— The Sine Fine Codex</div>
         </div>
 
-        {/* Central CHOOSE */}
         <div id="choose-word">CHOOSE</div>
-        {/* Portals */}
+
         <div className="portal-container" id="portal-somnium">
           <div className="portal-name">SOMNIUM</div>
         </div>
