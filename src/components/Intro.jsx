@@ -60,7 +60,7 @@ const Intro = () => {
       .to('#brand-header', { clipPath: 'inset(0 0% 0 0)', duration: 0.9, ease: 'power3.inOut' }, 2.0)
       .to('#epigraph', { clipPath: 'inset(0 0 0% 0)', duration: 1.0, ease: 'power3.out' }, 2.6)
       .to('#choose-word', { clipPath: 'inset(0 0% 0 0%)', duration: 0.9, ease: 'back.out(1.2)' }, 3.2)
-      .to('.portal-name, .portal-subtitle', { clipPath: 'inset(0 0 0% 0)', duration: 0.6, ease: 'power3.out', stagger: 0.1 }, 4.4)
+      .to('.portal-name', { clipPath: 'inset(0 0 0% 0)', duration: 0.6, ease: 'power3.out', stagger: 0.1 }, 4.4)
       .to('.sparkle', {
         opacity: () => 0.3 + Math.random() * 0.6,
         y: () => -10 + Math.random() * -20,
@@ -159,17 +159,14 @@ const Intro = () => {
         {/* Portals */}
         <div className="portal-container" id="portal-somnium">
           <div className="portal-name">SOMNIUM</div>
-          <div className="portal-subtitle">The Dream Realm</div>
         </div>
 
         <div className="portal-container" id="portal-fabula">
           <div className="portal-name">FABULA</div>
-          <div className="portal-subtitle">The Story Realm</div>
         </div>
 
         <div className="portal-container" id="portal-limen">
           <div className="portal-name">LIMEN</div>
-          <div className="portal-subtitle">The Threshold</div>
         </div>
 
         <div id="sparkles-container"></div>
