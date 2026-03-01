@@ -3,6 +3,8 @@ import gsap from 'gsap';
 
 const Intro = () => {
   const stageRef = useRef(null);
+  const inceptionImgRef = useRef(null);
+  const bigFishImgRef = useRef(null);
 
   useEffect(() => {
     const sparklesContainer = document.getElementById('sparkles-container');
@@ -27,7 +29,6 @@ const Intro = () => {
     }
 
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
     const branches = document.querySelectorAll('.branch-path');
 
     branches.forEach(p => {
@@ -40,6 +41,8 @@ const Intro = () => {
     gsap.set('#leaf-accents', { opacity: 0 });
     gsap.set('.corner-ornament', { opacity: 0, scale: 0.8 });
     gsap.set('.floating-symbol', { opacity: 0, y: 20 });
+    gsap.set('.inception-image', { opacity: 0 });
+    gsap.set('.big-fish-image', { opacity: 0 });
 
     tl.to('#center-ring', { opacity: 0.5, scale: 1, duration: 0.8, ease: 'back.out(1.5)' }, 0)
       .to('#center-ring2', { opacity: 0.35, scale: 1, duration: 1, ease: 'back.out(1.2)' }, 0.2)
@@ -87,50 +90,59 @@ const Intro = () => {
       duration: 2, ease: 'sine.inOut', repeat: -1, yoyo: true
     });
 
-    gsap.to('#center-ring', {
-      scale: 1.1,
-      opacity: 0.6,
-      duration: 3,
-      ease: 'sine.inOut',
-      repeat: -1,
-      yoyo: true
-    });
-
-    gsap.to('#center-ring2', {
-      rotation: 360,
-      duration: 60,
-      ease: 'none',
-      repeat: -1
-    });
+    gsap.to('#center-ring', { scale: 1.1, opacity: 0.6, duration: 3, ease: 'sine.inOut', repeat: -1, yoyo: true });
+    gsap.to('#center-ring2', { rotation: 360, duration: 60, ease: 'none', repeat: -1 });
 
     gsap.to('.floating-symbol', {
-      y: '-=10',
-      duration: 2,
-      ease: 'sine.inOut',
-      repeat: -1,
-      yoyo: true,
-      stagger: {
-        amount: 1,
-        from: 'random'
-      }
+      y: '-=10', duration: 2, ease: 'sine.inOut', repeat: -1, yoyo: true,
+      stagger: { amount: 1, from: 'random' }
     });
 
+    // --- HOVER ATMOSPHERE LOGIC ---
+    const body = document.querySelector('.intro-body');
     const portals = document.querySelectorAll('.portal-container');
+    const branchPaths = document.querySelectorAll('.branch-path');
+    const symbols = document.querySelectorAll('.floating-symbol');
+    const headings = document.querySelectorAll('h1, .portal-name, #epigraph p');
+
     portals.forEach(portal => {
       portal.addEventListener('mouseenter', () => {
-        gsap.to(portal.querySelector('.portal-name'), {
-          scale: 1.1,
-          duration: 0.3,
-          ease: 'back.out(2)'
-        });
+        gsap.to(portal.querySelector('.portal-name'), { scale: 1.1, duration: 0.3, ease: 'back.out(2)' });
+
+        if (portal.id === 'portal-somnium') {
+          // INCEPTION IMAGE REVEAL
+          gsap.to('.inception-image', { opacity: 0.6, duration: 1.2 });
+          gsap.to(body, { backgroundColor: '#000', duration: 1 });
+          gsap.to(branchPaths, { stroke: '#415A77', duration: 0.8 });
+          gsap.to([symbols, '#choose-word'], { color: '#E0E1DD', duration: 0.8 });
+        } else if (portal.id === 'portal-fabula') {
+          // BIG FISH: Narcissus Garden (Yellows & Greens)
+          gsap.to('.big-fish-image', { opacity: 0.6, duration: 1.2 });
+          gsap.to(body, { backgroundColor: '#000', duration: 1 });
+          gsap.to(branchPaths, { stroke: '#415A77', duration: 0.8 });
+          gsap.to([symbols, '#choose-word'], { color: '#E0E1DD', duration: 0.8 });
+
+        } else if (portal.id === 'portal-limen') {
+          // COCO: Marigold (Turuncu Tonları)
+          gsap.to(body, { backgroundColor: '#1A1A2E', duration: 0.8 });
+          gsap.to(branchPaths, { stroke: '#FF7F11', duration: 0.8 });
+          gsap.to(symbols, { color: '#FFD166', duration: 0.8 });
+          gsap.to('#choose-word', { color: '#FFD166', duration: 0.8 });
+          gsap.to(headings, { color: '#FF595E', duration: 0.8 });
+        }
       });
 
       portal.addEventListener('mouseleave', () => {
-        gsap.to(portal.querySelector('.portal-name'), {
-          scale: 1,
-          duration: 0.3,
-          ease: 'power2.out'
-        });
+        gsap.to(portal.querySelector('.portal-name'), { scale: 1, duration: 0.3, ease: 'power2.out' });
+
+        // Restore Default
+        gsap.to('.inception-image', { opacity: 0, duration: 0.8 });
+        gsap.to('.big-fish-image', { opacity: 0, duration: 0.8 });
+        gsap.to(body, { backgroundColor: '#f5f0e8', duration: 0.8 });
+        gsap.to(branchPaths, { stroke: '#c9a84c', duration: 0.8 });
+        gsap.to(symbols, { color: '#c9a84c', duration: 0.8 });
+        gsap.to('#choose-word', { color: '#c9a84c', duration: 0.8 });
+        gsap.to(headings, { color: '#1a1208', duration: 0.8 });
       });
     });
 
@@ -138,6 +150,11 @@ const Intro = () => {
 
   return (
     <div className="intro-body">
+      {/* Background Image for Somnium (Inception) */}
+      <img className='inception-image' src="/images/somonium.jpg" alt="Inception background" ref={inceptionImgRef} />
+      {/* Background Image for Fabula (Big Fish) */}
+      <img className='big-fish-image' src="/images/big-fish.jpg" alt="Big Fish background" ref={bigFishImgRef} />
+
       <div id="stage" ref={stageRef}>
         <svg id="branch-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid meet">
           <defs>
@@ -202,33 +219,30 @@ const Intro = () => {
 
         <div className="corner-ornament" id="ornament-tl">
           <svg viewBox="0 0 100 100" fill="none">
-            <path d="M10 10 L30 10 L30 12 L12 12 L12 30 L10 30 Z" fill="var(--gold)" opacity="0.4" />
-            <path d="M15 15 L35 15 L35 17 L17 17 L17 35 L15 35 Z" fill="var(--gold)" opacity="0.3" />
-            <circle cx="20" cy="20" r="3" fill="var(--gold)" opacity="0.5" />
+            <path d="M10 10 L30 10 L30 12 L12 12 L12 30 L10 30 Z" fill="currentColor" opacity="0.4" />
+            <path d="M15 15 L35 15 L35 17 L17 17 L17 35 L15 35 Z" fill="currentColor" opacity="0.3" />
+            <circle cx="20" cy="20" r="3" fill="currentColor" opacity="0.5" />
           </svg>
         </div>
-
         <div className="corner-ornament" id="ornament-tr">
           <svg viewBox="0 0 100 100" fill="none">
-            <path d="M10 10 L30 10 L30 12 L12 12 L12 30 L10 30 Z" fill="var(--gold)" opacity="0.4" />
-            <path d="M15 15 L35 15 L35 17 L17 17 L17 35 L15 35 Z" fill="var(--gold)" opacity="0.3" />
-            <circle cx="20" cy="20" r="3" fill="var(--gold)" opacity="0.5" />
+            <path d="M10 10 L30 10 L30 12 L12 12 L12 30 L10 30 Z" fill="currentColor" opacity="0.4" />
+            <path d="M15 15 L35 15 L35 17 L17 17 L17 35 L15 35 Z" fill="currentColor" opacity="0.3" />
+            <circle cx="20" cy="20" r="3" fill="currentColor" opacity="0.5" />
           </svg>
         </div>
-
         <div className="corner-ornament" id="ornament-bl">
           <svg viewBox="0 0 100 100" fill="none">
-            <path d="M10 10 L30 10 L30 12 L12 12 L12 30 L10 30 Z" fill="var(--gold)" opacity="0.4" />
-            <path d="M15 15 L35 15 L35 17 L17 17 L17 35 L15 35 Z" fill="var(--gold)" opacity="0.3" />
-            <circle cx="20" cy="20" r="3" fill="var(--gold)" opacity="0.5" />
+            <path d="M10 10 L30 10 L30 12 L12 12 L12 30 L10 30 Z" fill="currentColor" opacity="0.4" />
+            <path d="M15 15 L35 15 L35 17 L17 17 L17 35 L15 35 Z" fill="currentColor" opacity="0.3" />
+            <circle cx="20" cy="20" r="3" fill="currentColor" opacity="0.5" />
           </svg>
         </div>
-
         <div className="corner-ornament" id="ornament-br">
           <svg viewBox="0 0 100 100" fill="none">
-            <path d="M10 10 L30 10 L30 12 L12 12 L12 30 L10 30 Z" fill="var(--gold)" opacity="0.4" />
-            <path d="M15 15 L35 15 L35 17 L17 17 L17 35 L15 35 Z" fill="var(--gold)" opacity="0.3" />
-            <circle cx="20" cy="20" r="3" fill="var(--gold)" opacity="0.5" />
+            <path d="M10 10 L30 10 L30 12 L12 12 L12 30 L10 30 Z" fill="currentColor" opacity="0.4" />
+            <path d="M15 15 L35 15 L35 17 L17 17 L17 35 L15 35 Z" fill="currentColor" opacity="0.3" />
+            <circle cx="20" cy="20" r="3" fill="currentColor" opacity="0.5" />
           </svg>
         </div>
 
@@ -253,20 +267,15 @@ const Intro = () => {
         <div className="portal-container" id="portal-somnium">
           <div className="portal-name">SOMNIUM</div>
         </div>
-
         <div className="portal-container" id="portal-fabula">
           <div className="portal-name">FABULA</div>
         </div>
-
         <div className="portal-container" id="portal-limen">
           <div className="portal-name">LIMEN</div>
         </div>
 
         <div id="sparkles-container"></div>
-
-        <div id="footer-text">
-          <p>sine fine &nbsp;·&nbsp; without end &nbsp;·&nbsp; beyond limits</p>
-        </div>
+        <div id="footer-text"><p>sine fine &nbsp;·&nbsp; without end &nbsp;·&nbsp; beyond limits</p></div>
       </div>
     </div>
   );
