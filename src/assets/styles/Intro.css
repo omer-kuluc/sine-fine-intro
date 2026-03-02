@@ -84,7 +84,7 @@
   font-weight: 700;
   font-style: italic;
   letter-spacing: 0.3em;
-  color: #a5a24e;
+  color: var(--gold);
   transition: color 0.8s ease;
 }
 
