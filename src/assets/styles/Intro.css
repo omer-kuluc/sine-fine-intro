@@ -19,7 +19,8 @@
 
 /* Inception Arkaplan Görseli Stili */
 .inception-image,
-.big-fish-image {
+.big-fish-image,
+.coco-image {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -77,12 +78,13 @@
   margin-bottom: 4px;
 }
 
-#brand-header h1 {
+.brand-header-text {
   font-family: 'Cinzel', serif;
   font-size: clamp(22px, 3vw, 34px);
-  font-weight: 400;
+  font-weight: 700;
+  font-style: italic;
   letter-spacing: 0.3em;
-  color: var(--text-dark);
+  color: #a5a24e;
   transition: color 0.8s ease;
 }
 
@@ -119,7 +121,7 @@
   position: absolute;
   z-index: 10;
   font-family: 'Cinzel', serif;
-  font-size: clamp(52px, 8vw, 96px);
+  font-size: clamp(18px, 8vw, 96px);
   font-weight: 600;
   letter-spacing: 0.15em;
   color: var(--gold);
@@ -145,9 +147,7 @@
   transition: transform 0.3s ease;
 }
 
-.portal-container:hover {
-  transform: translateY(-5px) scale(1.05);
-}
+
 
 .portal-container::before {
   content: '';
@@ -158,6 +158,8 @@
   border-radius: 50%;
   opacity: 0;
   transition: all 0.4s ease;
+  margin-inline: auto;
+  padding: 10px;
 }
 
 .portal-container:hover::before {
@@ -165,20 +167,31 @@
   transform: scale(1.2);
 }
 
+#portal-somnium {
+  left: 2vw;
+}
+
+#portal-fabula {
+  right: 2vw;
+}
+
+#portal-limen {
+  bottom: 25vh;
+}
+
 .portal-name {
   font-family: 'Cinzel', serif;
   font-size: 10px;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.15em;
   color: var(--text-dark);
-  clip-path: inset(0 0 100% 0);
   transition: all 0.3s ease, color 0.8s ease;
   position: relative;
-  padding: 8px 16px;
+  padding: 4px 8px;
 }
 
-.portal-container:hover .portal-name {
-  color: var(--gold);
-  letter-spacing: 0.3em;
+.intro-body:has(.portal-container:hover) .portal-name,
+.intro-body:has(.portal-container:hover) .brand-header-text {
+  color: #fff;
 }
 
 .sparkle {
@@ -273,6 +286,10 @@
 @media(width>=768px) {
   .portal-name {
     font-size: 12px;
+  }
+
+  #portal-limen {
+    bottom: 20vh;
   }
 
   #footer-text p {

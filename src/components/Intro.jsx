@@ -5,6 +5,7 @@ const Intro = () => {
   const stageRef = useRef(null);
   const inceptionImgRef = useRef(null);
   const bigFishImgRef = useRef(null);
+  const cocoImgRef = useRef(null);
 
   useEffect(() => {
     const sparklesContainer = document.getElementById('sparkles-container');
@@ -43,6 +44,7 @@ const Intro = () => {
     gsap.set('.floating-symbol', { opacity: 0, y: 20 });
     gsap.set('.inception-image', { opacity: 0 });
     gsap.set('.big-fish-image', { opacity: 0 });
+    gsap.set('.coco-image', { opacity: 0 });
 
     tl.to('#center-ring', { opacity: 0.5, scale: 1, duration: 0.8, ease: 'back.out(1.5)' }, 0)
       .to('#center-ring2', { opacity: 0.35, scale: 1, duration: 1, ease: 'back.out(1.2)' }, 0.2)
@@ -103,11 +105,11 @@ const Intro = () => {
     const portals = document.querySelectorAll('.portal-container');
     const branchPaths = document.querySelectorAll('.branch-path');
     const symbols = document.querySelectorAll('.floating-symbol');
-    const headings = document.querySelectorAll('h1, .portal-name, #epigraph p');
+    const headings = document.querySelectorAll(' #epigraph p');
 
     portals.forEach(portal => {
       portal.addEventListener('mouseenter', () => {
-        gsap.to(portal.querySelector('.portal-name'), { scale: 1.1, duration: 0.3, ease: 'back.out(2)' });
+        gsap.to(portal.querySelector('.portal-name'), { duration: 0.3, ease: 'power2.inOut' });
 
         if (portal.id === 'portal-somnium') {
           // INCEPTION IMAGE REVEAL
@@ -124,11 +126,11 @@ const Intro = () => {
 
         } else if (portal.id === 'portal-limen') {
           // COCO: Marigold (Turuncu Tonları)
-          gsap.to(body, { backgroundColor: '#1A1A2E', duration: 0.8 });
-          gsap.to(branchPaths, { stroke: '#FF7F11', duration: 0.8 });
-          gsap.to(symbols, { color: '#FFD166', duration: 0.8 });
-          gsap.to('#choose-word', { color: '#FFD166', duration: 0.8 });
-          gsap.to(headings, { color: '#FF595E', duration: 0.8 });
+          gsap.to('.coco-image', { opacity: 0.6, duration: 1.2 });
+          gsap.to(body, { backgroundColor: '#000', duration: 1 });
+          gsap.to(branchPaths, { stroke: '#415A77', duration: 0.8 });
+          gsap.to([symbols, '#choose-word'], { color: '#E0E1DD', duration: 0.8 });
+
         }
       });
 
@@ -138,6 +140,7 @@ const Intro = () => {
         // Restore Default
         gsap.to('.inception-image', { opacity: 0, duration: 0.8 });
         gsap.to('.big-fish-image', { opacity: 0, duration: 0.8 });
+        gsap.to('.coco-image', { opacity: 0, duration: 0.8 });
         gsap.to(body, { backgroundColor: '#f5f0e8', duration: 0.8 });
         gsap.to(branchPaths, { stroke: '#c9a84c', duration: 0.8 });
         gsap.to(symbols, { color: '#c9a84c', duration: 0.8 });
@@ -154,6 +157,8 @@ const Intro = () => {
       <img className='inception-image' src="/images/somonium.jpg" alt="Inception background" ref={inceptionImgRef} />
       {/* Background Image for Fabula (Big Fish) */}
       <img className='big-fish-image' src="/images/big-fish.jpg" alt="Big Fish background" ref={bigFishImgRef} />
+      {/* Background Image for Limen (Coco) */}
+      <img className='coco-image' src="/images/coco-image.jpg" alt="Coco background" ref={cocoImgRef} />
 
       <div id="stage" ref={stageRef}>
         <svg id="branch-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid meet">
@@ -254,7 +259,7 @@ const Intro = () => {
 
         <div id="brand-header">
           <div className="label">Est. MMXXIV &nbsp;·&nbsp; A World Beyond Limits</div>
-          <h1>SINE FINE</h1>
+          <h1 className='brand-header-text'>SINE FINE</h1>
         </div>
 
         <div id="epigraph">
