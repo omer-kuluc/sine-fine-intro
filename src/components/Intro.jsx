@@ -68,7 +68,7 @@ const Intro = () => {
         stagger: { amount: 0.4, from: 'edges' },
         ease: 'back.out(1.5)'
       }, 2.2)
-      .to('#brand-header', { clipPath: 'inset(0 0% 0 0)', duration: 0.9, ease: 'power3.inOut' }, 2.0)
+      .to('.brand-header', { clipPath: 'inset(0 0% 0 0)', duration: 0.9, ease: 'power3.inOut' }, 2.0)
       .to('#epigraph', { clipPath: 'inset(0 0 0% 0)', duration: 1.0, ease: 'power3.out' }, 2.6)
       .to('#choose-word', { clipPath: 'inset(0 0% 0 0%)', duration: 0.9, ease: 'back.out(1.2)' }, 3.2)
       .to('.portal-name', { clipPath: 'inset(0 0 0% 0)', duration: 0.6, ease: 'power3.out', stagger: 0.1 }, 4.4)
@@ -154,11 +154,11 @@ const Intro = () => {
   return (
     <div className="intro-body">
       {/* Background Image for Somnium (Inception) */}
-      <img className='inception-image' src="/images/somonium.jpg" alt="Inception background" ref={inceptionImgRef} />
+      <img className='inception-image' src="/images/somnium.jpg" alt="Inception background" ref={inceptionImgRef} />
       {/* Background Image for Fabula (Big Fish) */}
-      <img className='big-fish-image' src="/images/big-fish.jpg" alt="Big Fish background" ref={bigFishImgRef} />
+      <img className='big-fish-image' src="/images/fabula.jpg" alt="Big Fish background" ref={bigFishImgRef} />
       {/* Background Image for Limen (Coco) */}
-      <img className='coco-image' src="/images/coco-image.jpg" alt="Coco background" ref={cocoImgRef} />
+      <img className='coco-image' src="/images/limen.jpg" alt="Coco background" ref={cocoImgRef} />
 
       <div id="stage" ref={stageRef}>
         <svg id="branch-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid meet">
@@ -257,7 +257,7 @@ const Intro = () => {
         <div className="floating-symbol" style={{ right: '15%', bottom: '25%' }}>※</div>
         <div className="floating-symbol" style={{ left: '50%', top: '15%', transform: 'translateX(-50%)' }}>✧</div>
 
-        <div id="brand-header">
+        <div className="brand-header">
           <div className="label">Est. MMXXIV &nbsp;·&nbsp; A World Beyond Limits</div>
           <h1 className='brand-header-text'>SINE FINE</h1>
         </div>
