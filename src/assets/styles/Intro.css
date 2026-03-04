@@ -107,14 +107,6 @@
   transition: color 0.8s ease;
 }
 
-#epigraph .attr {
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  color: var(--gold);
-  margin-top: 10px;
-  font-style: normal;
-}
-
 #choose-word {
   position: absolute;
   z-index: 10;
@@ -188,7 +180,8 @@
 }
 
 .intro-body:has(.portal-container:hover) .portal-name,
-.intro-body:has(.portal-container:hover) .brand-header-text {
+.intro-body:has(.portal-container:hover) .brand-header-text,
+.intro-body:has(.portal-container:hover) #epigraph p {
   color: #fff;
 }
 
