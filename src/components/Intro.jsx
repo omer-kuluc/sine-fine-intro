@@ -7,7 +7,6 @@ const Intro = () => {
   const bigFishImgRef = useRef(null);
   const cocoImgRef = useRef(null);
 
-  // Sparkle pozisyonlarını memoize ediyoruz ki her renderda değişmesin
   const sparklePositions = useMemo(() => [
     [15, 20], [25, 15], [8, 50], [18, 70], [30, 85], [85, 15], [92, 30], [80, 65], [90, 75], [70, 90],
     [45, 5], [55, 95], [5, 45], [95, 55], [35, 92], [65, 8], [12, 35], [88, 45], [42, 78], [58, 22],
@@ -16,16 +15,22 @@ const Intro = () => {
   ], []);
 
   useEffect(() => {
-    // GSAP Context kullanarak seçimleri konteyner ile sınırlıyoruz (React best practice)
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
       const branches = gsap.utils.toArray('.branch-path');
 
-      // Başlangıç ayarları
+      // FOUC ENGELLEME: CSS'de gizlediğimiz dalları, offset hesaplandığı an görünür yapıyoruz
       branches.forEach(p => {
         const len = p.getTotalLength();
-        gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
+        gsap.set(p, {
+          strokeDasharray: len,
+          strokeDashoffset: len,
+          visibility: 'visible' // Burada görünür yapıyoruz, ama offset yüzünden hala çizili değiller
+        });
       });
+
+      // Diğer gizli elemanları GSAP hazır olduğunda görünür yap
+      gsap.set(['#center-ring', '#center-ring2', '#leaf-accents'], { visibility: 'visible' });
 
       gsap.set('#center-ring', { opacity: 0, scale: 0, transformOrigin: '720px 450px' });
       gsap.set('#center-ring2', { opacity: 0, scale: 0, transformOrigin: '720px 450px' });
@@ -71,52 +76,39 @@ const Intro = () => {
         }, 3.8)
         .to('.footer-text', { clipPath: 'inset(0 0% 0 0)', duration: 0.7, ease: 'power3.out' }, 5.0);
 
-      // Sonsuz Döngüler
+      // Döngüler
       gsap.to('.choose-word', {
         textShadow: '0 0 80px rgba(201,168,76,0.6)',
         duration: 2, ease: 'sine.inOut', repeat: -1, yoyo: true
       });
-
       gsap.to('#center-ring', { scale: 1.1, opacity: 0.6, duration: 3, ease: 'sine.inOut', repeat: -1, yoyo: true });
       gsap.to('#center-ring2', { rotation: 360, duration: 60, ease: 'none', repeat: -1 });
-
       gsap.to('.floating-symbol', {
         y: '-=10', duration: 2, ease: 'sine.inOut', repeat: -1, yoyo: true,
         stagger: { amount: 1, from: 'random' }
       });
 
-    }, containerRef); // Scoping
+    }, containerRef);
 
-    return () => ctx.revert(); // Cleanup
+    return () => ctx.revert();
   }, []);
 
-  // Hover Mantığı (React Inline Handler)
   const handlePortalEnter = (id) => {
     const branchPaths = containerRef.current.querySelectorAll('.branch-path');
     const symbols = containerRef.current.querySelectorAll('.floating-symbol');
     const word = containerRef.current.querySelector('.choose-word');
-
-    const commonTo = { backgroundColor: '#000', duration: 1 };
-    const elementsTo = { stroke: '#415A77', color: '#E0E1DD', duration: 0.8 };
-
-    if (id === 'portal-somnium') {
-      gsap.to('.inception-image', { opacity: 0.6, duration: 1.2 });
-    } else if (id === 'portal-fabula') {
-      gsap.to('.big-fish-image', { opacity: 0.6, duration: 1.2 });
-    } else if (id === 'portal-limen') {
-      gsap.to('.coco-image', { opacity: 0.6, duration: 1.2 });
-    }
-
-    gsap.to('.intro-body', commonTo);
-    gsap.to(branchPaths, { stroke: elementsTo.stroke, duration: elementsTo.duration });
-    gsap.to([symbols, word], { color: elementsTo.color, duration: elementsTo.duration });
+    gsap.to('.intro-body', { backgroundColor: '#000', duration: 1 });
+    gsap.to(branchPaths, { stroke: '#415A77', duration: 0.8 });
+    gsap.to([symbols, word], { color: '#E0E1DD', duration: 0.8 });
+    if (id === 'portal-somnium') gsap.to('.inception-image', { opacity: 0.6, duration: 1.2 });
+    else if (id === 'portal-fabula') gsap.to('.big-fish-image', { opacity: 0.6, duration: 1.2 });
+    else if (id === 'portal-limen') gsap.to('.coco-image', { opacity: 0.6, duration: 1.2 });
   };
 
   const handlePortalLeave = () => {
     const branchPaths = containerRef.current.querySelectorAll('.branch-path');
     const symbols = containerRef.current.querySelectorAll('.floating-symbol');
     const word = containerRef.current.querySelector('.choose-word');
-
     gsap.to('.inception-image, .big-fish-image, .coco-image', { opacity: 0, duration: 0.8 });
     gsap.to('.intro-body', { backgroundColor: '#f5f0e8', duration: 0.8 });
     gsap.to(branchPaths, { stroke: '#c9a84c', duration: 0.8 });
@@ -137,7 +129,6 @@ const Intro = () => {
               <feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge>
             </filter>
           </defs>
-          {/* Dalları aynen koruyoruz */}
           <path className="branch-path" d="M720,450 Q718,380 715,310 Q712,260 700,200" strokeWidth="1.5" opacity="0.6" filter="url(#glow)" />
           <path className="branch-path" d="M715,310 Q680,280 640,240 Q610,210 570,180" strokeWidth="1" opacity="0.5" />
           <path className="branch-path" d="M715,310 Q750,280 780,250 Q810,220 840,190" strokeWidth="1" opacity="0.5" />

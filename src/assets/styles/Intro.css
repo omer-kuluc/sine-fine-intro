@@ -16,6 +16,14 @@
   transition: background-color 0.8s ease;
 }
 
+/* FOUC FIX: Sayfa ilk açıldığında dalların ve halkaların görünmesini engellemek için */
+.branch-path,
+#center-ring,
+#center-ring2,
+#leaf-accents {
+  visibility: hidden;
+}
+
 .inception-image,
 .big-fish-image,
 .coco-image {
@@ -185,29 +193,6 @@
   box-shadow: 0 0 8px var(--gold-light);
 }
 
-#ornament-tl {
-  top: 20px;
-  left: 20px;
-}
-
-#ornament-tr {
-  top: 20px;
-  right: 20px;
-  transform: scaleX(-1);
-}
-
-#ornament-bl {
-  bottom: 20px;
-  left: 20px;
-  transform: scaleY(-1);
-}
-
-#ornament-br {
-  bottom: 20px;
-  right: 20px;
-  transform: scale(-1);
-}
-
 .floating-symbol {
   position: absolute;
   font-size: 14px;
@@ -262,7 +247,6 @@
   .footer-text p {
     font-size: 9px;
   }
-
 }
 
 @media(width>=1280px) {
@@ -281,5 +265,4 @@
   .portal-name {
     font-size: 13px;
   }
-
 }
