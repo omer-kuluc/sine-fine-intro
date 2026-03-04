@@ -6,7 +6,6 @@
   --text-mid: #4a3820;
 }
 
-/* ---- MOBİL KODLARI ---- */
 .intro-body {
   width: 100%;
   height: 100vh;
@@ -17,7 +16,6 @@
   transition: background-color 0.8s ease;
 }
 
-/* Inception Arkaplan Görseli Stili */
 .inception-image,
 .big-fish-image,
 .coco-image {
@@ -39,10 +37,9 @@
   pointer-events: none;
   opacity: 0.4;
   mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
 }
 
-#stage {
+.stage {
   position: fixed;
   inset: 0;
   display: flex;
@@ -61,7 +58,7 @@
 
 .brand-header {
   position: absolute;
-  top: 48px;
+  top: 4%;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
@@ -78,7 +75,6 @@
 }
 
 .brand-header-text {
-  /* font-family: 'Cinzel', serif; */
   font-size: clamp(22px, 3vw, 34px);
   font-weight: 700;
   font-style: italic;
@@ -87,7 +83,7 @@
   transition: color 0.8s ease;
 }
 
-#epigraph {
+.epigraph {
   position: absolute;
   top: 140px;
   left: 50%;
@@ -98,7 +94,7 @@
   clip-path: inset(0 0 100% 0);
 }
 
-#epigraph p {
+.epigraph p {
   font-style: italic;
   font-size: clamp(13px, 1.4vw, 16px);
   line-height: 1.8;
@@ -107,10 +103,7 @@
   transition: color 0.8s ease;
 }
 
-#choose-word {
-  position: absolute;
-  z-index: 10;
-  /* font-family: 'Cinzel', serif; */
+.choose-word {
   font-size: clamp(18px, 8vw, 96px);
   font-weight: 600;
   letter-spacing: 0.15em;
@@ -121,7 +114,7 @@
   transition: all 0.4s ease, color 0.8s ease;
 }
 
-#choose-word:hover {
+.choose-word:hover {
   letter-spacing: 0.2em;
   text-shadow: 0 0 80px rgba(201, 168, 76, 0.5);
 }
@@ -136,8 +129,6 @@
   cursor: pointer;
   transition: transform 0.3s ease;
 }
-
-
 
 .portal-container::before {
   content: '';
@@ -170,7 +161,6 @@
 }
 
 .portal-name {
-  /* font-family: 'Cinzel', serif; */
   font-size: 10px;
   letter-spacing: 0.15em;
   color: var(--text-dark);
@@ -181,7 +171,7 @@
 
 .intro-body:has(.portal-container:hover) .portal-name,
 .intro-body:has(.portal-container:hover) .brand-header-text,
-.intro-body:has(.portal-container:hover) #epigraph p {
+.intro-body:has(.portal-container:hover) .epigraph p {
   color: #fff;
 }
 
@@ -193,22 +183,6 @@
   background: var(--gold-light);
   opacity: 0;
   box-shadow: 0 0 8px var(--gold-light);
-}
-
-.corner-ornament {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  pointer-events: none;
-  z-index: 5;
-  opacity: 0;
-  transition: color 0.8s ease;
-}
-
-.corner-ornament svg {
-  width: 100%;
-  height: 100%;
-  color: inherit;
 }
 
 #ornament-tl {
@@ -236,16 +210,19 @@
 
 .floating-symbol {
   position: absolute;
-  /* font-family: 'Cinzel', serif; */
   font-size: 14px;
   color: var(--gold);
   opacity: 0;
   pointer-events: none;
   z-index: 8;
   transition: color 0.8s ease;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+
 }
 
-#footer-text {
+.footer-text {
   position: absolute;
   bottom: 15px;
   left: 50%;
@@ -254,9 +231,10 @@
   text-align: center;
   z-index: 10;
   clip-path: inset(0 100% 0 0);
+  padding-bottom: 10px;
 }
 
-#footer-text p {
+.footer-text p {
   font-size: 8px;
   letter-spacing: 0.2em;
   color: var(--gold);
@@ -272,7 +250,6 @@
   transition: stroke 0.8s ease;
 }
 
-/* ---- TABLET KODLARI ---- */
 @media(width>=768px) {
   .portal-name {
     font-size: 12px;
@@ -282,17 +259,12 @@
     bottom: 20vh;
   }
 
-  #footer-text p {
+  .footer-text p {
     font-size: 9px;
   }
 
-  .corner-ornament {
-    width: 120px;
-    height: 120px;
-  }
 }
 
-/* ---- DESKTOP KODLARI ---- */
 @media(width>=1280px) {
   #portal-somnium {
     left: 8vw;
@@ -310,8 +282,4 @@
     font-size: 13px;
   }
 
-  .corner-ornament {
-    width: 140px;
-    height: 140px;
-  }
 }

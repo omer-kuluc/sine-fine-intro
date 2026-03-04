@@ -30,7 +30,6 @@ const Intro = () => {
       gsap.set('#center-ring', { opacity: 0, scale: 0, transformOrigin: '720px 450px' });
       gsap.set('#center-ring2', { opacity: 0, scale: 0, transformOrigin: '720px 450px' });
       gsap.set('#leaf-accents', { opacity: 0 });
-      gsap.set('.corner-ornament', { opacity: 0, scale: 0.8 });
       gsap.set('.floating-symbol', { opacity: 0, y: 20 });
       gsap.set('.inception-image, .big-fish-image, .coco-image', { opacity: 0 });
 
@@ -50,23 +49,19 @@ const Intro = () => {
           strokeDashoffset: 0, duration: 1.0, ease: 'power2.inOut', stagger: 0.1
         }, 1.2)
         .to('#leaf-accents', { opacity: 1, duration: 0.5 }, 2.4)
-        .to('.corner-ornament', {
-          opacity: 0.3,
-          scale: 1,
-          duration: 0.8,
-          stagger: { amount: 0.4, from: 'edges' },
-          ease: 'back.out(1.5)'
-        }, 2.2)
         .to('.brand-header', { clipPath: 'inset(0 0% 0 0)', duration: 0.9, ease: 'power3.inOut' }, 2.0)
-        .to('#epigraph', { clipPath: 'inset(0 0 0% 0)', duration: 1.0, ease: 'power3.out' }, 2.6)
-        .to('#choose-word', { clipPath: 'inset(0 0% 0 0%)', duration: 0.9, ease: 'back.out(1.2)' }, 3.2)
+        .to('.epigraph', { clipPath: 'inset(0 0 0% 0)', duration: 1.0, ease: 'power3.out' }, 2.6)
+        .to('.choose-word', { clipPath: 'inset(0 0% 0 0%)', duration: 0.9, ease: 'back.out(1.2)' }, 3.2)
         .to('.portal-name', { clipPath: 'inset(0 0 0% 0)', duration: 0.6, ease: 'power3.out', stagger: 0.1 }, 4.4)
         .to('.floating-symbol', {
           opacity: 0.4,
           y: 0,
           duration: 0.8,
           stagger: 0.15,
-          ease: 'power2.out'
+          ease: 'power2.out',
+          z: 0.1,
+          rotationZ: 0.01,
+          force3D: true
         }, 4.0)
         .to('.sparkle', {
           opacity: () => 0.3 + Math.random() * 0.6,
@@ -74,10 +69,10 @@ const Intro = () => {
           duration: () => 1 + Math.random() * 2,
           stagger: { amount: 2, from: 'random' }
         }, 3.8)
-        .to('#footer-text', { clipPath: 'inset(0 0% 0 0)', duration: 0.7, ease: 'power3.out' }, 5.0);
+        .to('.footer-text', { clipPath: 'inset(0 0% 0 0)', duration: 0.7, ease: 'power3.out' }, 5.0);
 
       // Sonsuz Döngüler
-      gsap.to('#choose-word', {
+      gsap.to('.choose-word', {
         textShadow: '0 0 80px rgba(201,168,76,0.6)',
         duration: 2, ease: 'sine.inOut', repeat: -1, yoyo: true
       });
@@ -99,7 +94,7 @@ const Intro = () => {
   const handlePortalEnter = (id) => {
     const branchPaths = containerRef.current.querySelectorAll('.branch-path');
     const symbols = containerRef.current.querySelectorAll('.floating-symbol');
-    const word = containerRef.current.querySelector('#choose-word');
+    const word = containerRef.current.querySelector('.choose-word');
 
     const commonTo = { backgroundColor: '#000', duration: 1 };
     const elementsTo = { stroke: '#415A77', color: '#E0E1DD', duration: 0.8 };
@@ -120,7 +115,7 @@ const Intro = () => {
   const handlePortalLeave = () => {
     const branchPaths = containerRef.current.querySelectorAll('.branch-path');
     const symbols = containerRef.current.querySelectorAll('.floating-symbol');
-    const word = containerRef.current.querySelector('#choose-word');
+    const word = containerRef.current.querySelector('.choose-word');
 
     gsap.to('.inception-image, .big-fish-image, .coco-image', { opacity: 0, duration: 0.8 });
     gsap.to('.intro-body', { backgroundColor: '#f5f0e8', duration: 0.8 });
@@ -134,7 +129,7 @@ const Intro = () => {
       <img className='big-fish-image' src="/images/fabula.jpg" alt="Big Fish" ref={bigFishImgRef} />
       <img className='coco-image' src="/images/limen.jpg" alt="Coco" ref={cocoImgRef} />
 
-      <div id="stage">
+      <div className="stage">
         <svg id="branch-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid meet">
           <defs>
             <filter id="glow">
@@ -195,17 +190,6 @@ const Intro = () => {
           </g>
         </svg>
 
-        {/* Ornamentlar */}
-        {['tl', 'tr', 'bl', 'br'].map(pos => (
-          <div key={pos} className="corner-ornament" id={`ornament-${pos}`}>
-            <svg viewBox="0 0 100 100" fill="none">
-              <path d="M10 10 L30 10 L30 12 L12 12 L12 30 L10 30 Z" fill="currentColor" opacity="0.4" />
-              <path d="M15 15 L35 15 L35 17 L17 17 L17 35 L15 35 Z" fill="currentColor" opacity="0.3" />
-              <circle cx="20" cy="20" r="3" fill="currentColor" opacity="0.5" />
-            </svg>
-          </div>
-        ))}
-
         <div className="floating-symbol" style={{ left: '15%', top: '25%' }}>∞</div>
         <div className="floating-symbol" style={{ right: '15%', top: '25%' }}>✦</div>
         <div className="floating-symbol" style={{ left: '15%', bottom: '25%' }}>◊</div>
@@ -213,15 +197,15 @@ const Intro = () => {
         <div className="floating-symbol" style={{ left: '50%', top: '15%', transform: 'translateX(-50%)' }}>✧</div>
 
         <div className="brand-header">
-          <div className="label">Est. MMXXIV &nbsp;·&nbsp; A World Beyond Limits</div>
+          <div className="label">Est. MMXXVI &nbsp;·&nbsp; A World Beyond Limits</div>
           <h1 className='brand-header-text'>SINE FINE</h1>
         </div>
 
-        <div id="epigraph">
+        <div className="epigraph">
           <p>Every choice is a door.<br />Every door, a labyrinth.<br />Every labyrinth, a universe waiting to be born.</p>
         </div>
 
-        <div id="choose-word">CHOOSE</div>
+        <div className="choose-word">CHOOSE</div>
 
         <div className="portal-container" id="portal-somnium"
           onMouseEnter={() => handlePortalEnter('portal-somnium')}
@@ -239,7 +223,7 @@ const Intro = () => {
           <div className="portal-name">LIMEN</div>
         </div>
 
-        <div id="sparkles-container">
+        <div className="sparkles-container">
           {sparklePositions.map((pos, i) => {
             const size = (2 + Math.random() * 4) + 'px';
             return (
@@ -252,7 +236,7 @@ const Intro = () => {
           })}
         </div>
 
-        <div id="footer-text"><p>sine fine &nbsp;·&nbsp; without end &nbsp;·&nbsp; beyond limits</p></div>
+        <div className="footer-text"><p>sine fine &nbsp;·&nbsp;  &nbsp;·&nbsp; without end</p></div>
       </div>
     </div>
   );
