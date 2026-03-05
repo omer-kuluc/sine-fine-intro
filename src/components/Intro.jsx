@@ -1,11 +1,10 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo, useState } from 'react';
 import gsap from 'gsap';
 
 const Intro = () => {
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
   const containerRef = useRef(null);
-  const inceptionImgRef = useRef(null);
-  const bigFishImgRef = useRef(null);
-  const cocoImgRef = useRef(null);
+  const modalRef = useRef(null);
 
   const sparklePositions = useMemo(() => [
     [15, 20], [25, 15], [8, 50], [18, 70], [30, 85], [85, 15], [92, 30], [80, 65], [90, 75], [70, 90],
@@ -19,26 +18,23 @@ const Intro = () => {
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
       const branches = gsap.utils.toArray('.branch-path');
 
-      // FOUC ENGELLEME: CSS'de gizlediğimiz dalları, offset hesaplandığı an görünür yapıyoruz
       branches.forEach(p => {
         const len = p.getTotalLength();
         gsap.set(p, {
           strokeDasharray: len,
           strokeDashoffset: len,
-          visibility: 'visible' // Burada görünür yapıyoruz, ama offset yüzünden hala çizili değiller
+          visibility: 'visible'
         });
       });
 
-      // Diğer gizli elemanları GSAP hazır olduğunda görünür yap
-      gsap.set(['#center-ring', '#center-ring2', '#leaf-accents'], { visibility: 'visible' });
-
+      gsap.set(['#center-ring', '#center-ring2', '#leaf-accents', '.info-btn'], { visibility: 'visible' });
       gsap.set('#center-ring', { opacity: 0, scale: 0, transformOrigin: '720px 450px' });
       gsap.set('#center-ring2', { opacity: 0, scale: 0, transformOrigin: '720px 450px' });
       gsap.set('#leaf-accents', { opacity: 0 });
       gsap.set('.floating-symbol', { opacity: 0, y: 20 });
       gsap.set('.inception-image, .big-fish-image, .coco-image', { opacity: 0 });
+      gsap.set('.info-btn', { opacity: 0 });
 
-      // Ana Timeline
       tl.to('#center-ring', { opacity: 0.5, scale: 1, duration: 0.8, ease: 'back.out(1.5)' }, 0)
         .to('#center-ring2', { opacity: 0.35, scale: 1, duration: 1, ease: 'back.out(1.2)' }, 0.2)
         .to([branches[0], branches[4], branches[9], branches[15]], {
@@ -57,16 +53,8 @@ const Intro = () => {
         .to('.brand-header', { clipPath: 'inset(0 0% 0 0)', duration: 0.9, ease: 'power3.inOut' }, 2.0)
         .to('.epigraph', { clipPath: 'inset(0 0 0% 0)', duration: 1.0, ease: 'power3.out' }, 2.6)
         .to('.choose-word', { clipPath: 'inset(0 0% 0 0%)', duration: 0.9, ease: 'back.out(1.2)' }, 3.2)
-        .to('.portal-name', { clipPath: 'inset(0 0 0% 0)', duration: 0.6, ease: 'power3.out', stagger: 0.1 }, 4.4)
         .to('.floating-symbol', {
-          opacity: 0.4,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: 'power2.out',
-          z: 0.1,
-          rotationZ: 0.01,
-          force3D: true
+          opacity: 0.4, y: 0, duration: 0.8, stagger: 0.15, ease: 'power2.out'
         }, 4.0)
         .to('.sparkle', {
           opacity: () => 0.3 + Math.random() * 0.6,
@@ -74,24 +62,25 @@ const Intro = () => {
           duration: () => 1 + Math.random() * 2,
           stagger: { amount: 2, from: 'random' }
         }, 3.8)
-        .to('.footer-text', { clipPath: 'inset(0 0% 0 0)', duration: 0.7, ease: 'power3.out' }, 5.0);
+        .to('.footer-text', { clipPath: 'inset(0 0% 0 0)', duration: 0.7, ease: 'power3.out' }, 5.0)
+        .to('.portal-name', { clipPath: 'inset(0 0 0% 0)', duration: 0.6, ease: 'power3.out', stagger: 0.1 }, 5.7)
+        .to('.info-btn', { opacity: 0.6, duration: 0.5 }, 6.0);
 
-      // Döngüler
-      gsap.to('.choose-word', {
-        textShadow: '0 0 80px rgba(201,168,76,0.6)',
-        duration: 2, ease: 'sine.inOut', repeat: -1, yoyo: true
-      });
+      // Loops
+      gsap.to('.choose-word', { textShadow: '0 0 80px rgba(201,168,76,0.6)', duration: 2, ease: 'sine.inOut', repeat: -1, yoyo: true });
       gsap.to('#center-ring', { scale: 1.1, opacity: 0.6, duration: 3, ease: 'sine.inOut', repeat: -1, yoyo: true });
       gsap.to('#center-ring2', { rotation: 360, duration: 60, ease: 'none', repeat: -1 });
-      gsap.to('.floating-symbol', {
-        y: '-=10', duration: 2, ease: 'sine.inOut', repeat: -1, yoyo: true,
-        stagger: { amount: 1, from: 'random' }
-      });
-
+      gsap.to('.floating-symbol', { y: '-=10', duration: 2, ease: 'sine.inOut', repeat: -1, yoyo: true, stagger: { amount: 1, from: 'random' } });
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
+
+  useEffect(() => {
+    if (isInfoOpen) {
+      gsap.fromTo(modalRef.current, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'power3.out' });
+    }
+  }, [isInfoOpen]);
 
   const handlePortalEnter = (id) => {
     const branchPaths = containerRef.current.querySelectorAll('.branch-path');
@@ -117,9 +106,31 @@ const Intro = () => {
 
   return (
     <div className="intro-body" ref={containerRef}>
-      <img className='inception-image' src="/images/somnium.jpg" alt="Inception" ref={inceptionImgRef} />
-      <img className='big-fish-image' src="/images/fabula.jpg" alt="Big Fish" ref={bigFishImgRef} />
-      <img className='coco-image' src="/images/limen.jpg" alt="Coco" ref={cocoImgRef} />
+      <img className='inception-image' src="/images/somnium.jpg" alt="Inception" />
+      <img className='big-fish-image' src="/images/fabula.jpg" alt="Big Fish" />
+      <img className='coco-image' src="/images/limen.jpg" alt="Coco" />
+
+      <button className="info-btn" onClick={() => setIsInfoOpen(true)}>INFO</button>
+
+      {isInfoOpen && (
+        <div className="info-modal-overlay" onClick={() => setIsInfoOpen(false)}>
+          <div className="info-modal-content" ref={modalRef} onClick={(e) => e.stopPropagation()}>
+            <button className="close-btn" onClick={() => setIsInfoOpen(false)}>✕</button>
+            <h3>SINE FINE</h3>
+            <div className="divider"></div>
+            <p className="inspired-by">Inspired by:</p>
+            <ul>
+              <li>Inception (2010)</li>
+              <li>Big Fish (2003)</li>
+              <li>Coco (2017)</li>
+            </ul>
+            <div className="disclaimer">
+              This project is created for educational purposes only.
+              All rights to original movie concepts belong to their respective owners.
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="stage">
         <svg id="branch-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid meet">
@@ -198,19 +209,13 @@ const Intro = () => {
 
         <div className="choose-word">CHOOSE</div>
 
-        <div className="portal-container" id="portal-somnium"
-          onMouseEnter={() => handlePortalEnter('portal-somnium')}
-          onMouseLeave={handlePortalLeave}>
+        <div className="portal-container" id="portal-somnium" onMouseEnter={() => handlePortalEnter('portal-somnium')} onMouseLeave={handlePortalLeave}>
           <div className="portal-name">SOMNIUM</div>
         </div>
-        <div className="portal-container" id="portal-fabula"
-          onMouseEnter={() => handlePortalEnter('portal-fabula')}
-          onMouseLeave={handlePortalLeave}>
+        <div className="portal-container" id="portal-fabula" onMouseEnter={() => handlePortalEnter('portal-fabula')} onMouseLeave={handlePortalLeave}>
           <div className="portal-name">FABULA</div>
         </div>
-        <div className="portal-container" id="portal-limen"
-          onMouseEnter={() => handlePortalEnter('portal-limen')}
-          onMouseLeave={handlePortalLeave}>
+        <div className="portal-container" id="portal-limen" onMouseEnter={() => handlePortalEnter('portal-limen')} onMouseLeave={handlePortalLeave}>
           <div className="portal-name">LIMEN</div>
         </div>
 
@@ -218,16 +223,12 @@ const Intro = () => {
           {sparklePositions.map((pos, i) => {
             const size = (2 + Math.random() * 4) + 'px';
             return (
-              <div
-                key={i}
-                className="sparkle"
-                style={{ left: `${pos[0]}%`, top: `${pos[1]}%`, width: size, height: size }}
-              />
+              <div key={i} className="sparkle" style={{ left: `${pos[0]}%`, top: `${pos[1]}%`, width: size, height: size }} />
             );
           })}
         </div>
 
-        <div className="footer-text"><p>sine fine &nbsp;·&nbsp;  &nbsp;·&nbsp; without end</p></div>
+        <div className="footer-text"><p>sine fine &nbsp;·&nbsp; &nbsp;·&nbsp; without end</p></div>
       </div>
     </div>
   );
