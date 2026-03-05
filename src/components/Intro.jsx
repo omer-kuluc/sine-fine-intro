@@ -7,6 +7,27 @@ const Intro = () => {
   const modalRef = useRef(null);
   const modalOverlayRef = useRef(null);
 
+  useEffect(() => {
+    const preventDefault = (e) => {
+      if (e.touches.length > 1) return;
+      e.preventDefault();
+    };
+
+    document.addEventListener('touchmove', preventDefault, { passive: false });
+    document.addEventListener('wheel', preventDefault, { passive: false });
+
+    const ctx = gsap.context(() => {
+    }, containerRef);
+
+    return () => {
+      document.removeEventListener('touchmove', preventDefault);
+      document.removeEventListener('wheel', preventDefault);
+      ctx.revert();
+    };
+  }, []);
+
+
+
   const sparklePositions = useMemo(() => [
     [15, 20], [25, 15], [8, 50], [18, 70], [30, 85], [85, 15], [92, 30], [80, 65], [90, 75], [70, 90],
     [45, 5], [55, 95], [5, 45], [95, 55], [35, 92], [65, 8], [12, 35], [88, 45], [42, 78], [58, 22],
