@@ -5,6 +5,7 @@ const Intro = () => {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const containerRef = useRef(null);
   const modalRef = useRef(null);
+  const modalOverlayRef = useRef(null);
 
   const sparklePositions = useMemo(() => [
     [15, 20], [25, 15], [8, 50], [18, 70], [30, 85], [85, 15], [92, 30], [80, 65], [90, 75], [70, 90],
@@ -20,67 +21,71 @@ const Intro = () => {
 
       branches.forEach(p => {
         const len = p.getTotalLength();
-        gsap.set(p, {
-          strokeDasharray: len,
-          strokeDashoffset: len,
-          visibility: 'visible'
-        });
+        gsap.set(p, { strokeDasharray: len, strokeDashoffset: len, visibility: 'visible' });
       });
 
       gsap.set(['#center-ring', '#center-ring2', '#leaf-accents', '.info-btn'], { visibility: 'visible' });
       gsap.set('#center-ring', { opacity: 0, scale: 0, transformOrigin: '720px 450px' });
       gsap.set('#center-ring2', { opacity: 0, scale: 0, transformOrigin: '720px 450px' });
       gsap.set('#leaf-accents', { opacity: 0 });
-      gsap.set('.floating-symbol', { opacity: 0, y: 20 });
+      gsap.set('.floating-symbol', { opacity: 0, y: 20, z: 0.1, rotationZ: 0.01, force3D: true });
       gsap.set('.inception-image, .big-fish-image, .coco-image', { opacity: 0 });
       gsap.set('.info-btn', { opacity: 0 });
 
       tl.to('#center-ring', { opacity: 0.5, scale: 1, duration: 0.8, ease: 'back.out(1.5)' }, 0)
         .to('#center-ring2', { opacity: 0.35, scale: 1, duration: 1, ease: 'back.out(1.2)' }, 0.2)
-        .to([branches[0], branches[4], branches[9], branches[15]], {
-          strokeDashoffset: 0, duration: 1.4, ease: 'power2.inOut', stagger: 0.15
-        }, 0.4)
-        .to([branches[1], branches[2], branches[5], branches[6], branches[10], branches[11], branches[16], branches[17]], {
-          strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut', stagger: 0.08
-        }, 1.0)
-        .to(branches.slice(18, 29), {
-          strokeDashoffset: 0, duration: 0.8, ease: 'power2.out', stagger: 0.04
-        }, 1.6)
-        .to([branches[29], branches[30], branches[31], branches[32]], {
-          strokeDashoffset: 0, duration: 1.0, ease: 'power2.inOut', stagger: 0.1
-        }, 1.2)
+        .to([branches[0], branches[4], branches[9], branches[15]], { strokeDashoffset: 0, duration: 1.4, ease: 'power2.inOut', stagger: 0.15 }, 0.4)
+        .to([branches[1], branches[2], branches[5], branches[6], branches[10], branches[11], branches[16], branches[17]], { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut', stagger: 0.08 }, 1.0)
+        .to(branches.slice(18, 29), { strokeDashoffset: 0, duration: 0.8, ease: 'power2.out', stagger: 0.04 }, 1.6)
+        .to([branches[29], branches[30], branches[31], branches[32]], { strokeDashoffset: 0, duration: 1.0, ease: 'power2.inOut', stagger: 0.1 }, 1.2)
         .to('#leaf-accents', { opacity: 1, duration: 0.5 }, 2.4)
         .to('.brand-header', { clipPath: 'inset(0 0% 0 0)', duration: 0.9, ease: 'power3.inOut' }, 2.0)
         .to('.epigraph', { clipPath: 'inset(0 0 0% 0)', duration: 1.0, ease: 'power3.out' }, 2.6)
         .to('.choose-word', { clipPath: 'inset(0 0% 0 0%)', duration: 0.9, ease: 'back.out(1.2)' }, 3.2)
-        .to('.floating-symbol', {
-          opacity: 0.4, y: 0, duration: 0.8, stagger: 0.15, ease: 'power2.out'
-        }, 4.0)
-        .to('.sparkle', {
-          opacity: () => 0.3 + Math.random() * 0.6,
-          y: () => -10 + Math.random() * -20,
-          duration: () => 1 + Math.random() * 2,
-          stagger: { amount: 2, from: 'random' }
-        }, 3.8)
+        .to('.floating-symbol', { opacity: 0.4, y: 0, duration: 0.8, stagger: 0.15, ease: 'power2.out', z: 0.1, rotationZ: 0.01, force3D: true }, 4.0)
+        .to('.sparkle', { opacity: () => 0.3 + Math.random() * 0.6, y: () => -10 + Math.random() * -20, duration: () => 1 + Math.random() * 2, stagger: { amount: 2, from: 'random' } }, 3.8)
         .to('.footer-text', { clipPath: 'inset(0 0% 0 0)', duration: 0.7, ease: 'power3.out' }, 5.0)
         .to('.portal-name', { clipPath: 'inset(0 0 0% 0)', duration: 0.6, ease: 'power3.out', stagger: 0.1 }, 5.7)
         .to('.info-btn', { opacity: 0.6, duration: 0.5 }, 6.0);
 
-      // Loops
       gsap.to('.choose-word', { textShadow: '0 0 80px rgba(201,168,76,0.6)', duration: 2, ease: 'sine.inOut', repeat: -1, yoyo: true });
       gsap.to('#center-ring', { scale: 1.1, opacity: 0.6, duration: 3, ease: 'sine.inOut', repeat: -1, yoyo: true });
       gsap.to('#center-ring2', { rotation: 360, duration: 60, ease: 'none', repeat: -1 });
-      gsap.to('.floating-symbol', { y: '-=10', duration: 2, ease: 'sine.inOut', repeat: -1, yoyo: true, stagger: { amount: 1, from: 'random' } });
+      gsap.to('.floating-symbol', { y: '-=10', duration: 2, ease: 'sine.inOut', repeat: -1, yoyo: true, z: 0.1, rotationZ: 0.01, force3D: true, stagger: { amount: 1, from: 'random' } });
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
+  // AÇILIŞ ANİMASYONU
   useEffect(() => {
     if (isInfoOpen) {
-      gsap.fromTo(modalRef.current, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'power3.out' });
+      gsap.fromTo(modalOverlayRef.current, { opacity: 0 }, { opacity: 1, duration: 0.4 });
+      gsap.fromTo(modalRef.current,
+        { opacity: 0, scale: 0.9, y: 30 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: 'power4.out' }
+      );
     }
   }, [isInfoOpen]);
+
+  // KAPANIŞ ANİMASYONU (YUMUŞAK)
+  const handleCloseInfo = () => {
+    const tl = gsap.timeline({
+      onComplete: () => setIsInfoOpen(false) // Animasyon bitince elementi DOM'dan kaldır
+    });
+
+    tl.to(modalRef.current, {
+      opacity: 0,
+      scale: 0.9,
+      y: 20,
+      duration: 0.4,
+      ease: 'power2.in'
+    })
+      .to(modalOverlayRef.current, {
+        opacity: 0,
+        duration: 0.3
+      }, "-=0.2");
+  };
 
   const handlePortalEnter = (id) => {
     const branchPaths = containerRef.current.querySelectorAll('.branch-path');
@@ -113,20 +118,32 @@ const Intro = () => {
       <button className="info-btn" onClick={() => setIsInfoOpen(true)}>INFO</button>
 
       {isInfoOpen && (
-        <div className="info-modal-overlay" onClick={() => setIsInfoOpen(false)}>
+        <div className="info-modal-overlay" ref={modalOverlayRef} onClick={handleCloseInfo}>
           <div className="info-modal-content" ref={modalRef} onClick={(e) => e.stopPropagation()}>
-            <button className="close-btn" onClick={() => setIsInfoOpen(false)}>✕</button>
-            <h3>SINE FINE</h3>
-            <div className="divider"></div>
-            <p className="inspired-by">Inspired by:</p>
-            <ul>
-              <li>Inception (2010)</li>
-              <li>Big Fish (2003)</li>
-              <li>Coco (2017)</li>
-            </ul>
-            <div className="disclaimer">
-              This project is created for educational purposes only.
-              All rights to original movie concepts belong to their respective owners.
+            <button className="close-btn" onClick={handleCloseInfo}>✕</button>
+
+            <div className="modal-header">
+              <h3>SINE FINE</h3>
+            </div>
+
+            <div className="modal-divider">
+              <div className="line"></div>
+              <span className="symbol">✦</span>
+              <div className="line"></div>
+            </div>
+
+            <div className="modal-body">
+              <p className="inspired-by">Inspired by the realms of:</p>
+              <ul className="movie-list">
+                <li><span className="movie-name">Inception</span> <span className="movie-year">2010</span></li>
+                <li><span className="movie-name">Big Fish</span> <span className="movie-year">2003</span></li>
+                <li><span className="movie-name">Coco</span> <span className="movie-year">2017</span></li>
+              </ul>
+
+              <div className="disclaimer-box">
+                <p>This experience is crafted for educational and non-commercial purposes only.</p>
+                <p>Concept and imagery inspired by the cinematic works of their respective visionaries.</p>
+              </div>
             </div>
           </div>
         </div>
