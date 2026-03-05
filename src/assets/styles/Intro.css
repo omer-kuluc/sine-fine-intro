@@ -294,7 +294,7 @@
 }
 
 .portal-name {
-  font-size: 10px;
+  font-size: 0.6rem;
   letter-spacing: 0.15em;
   color: var(--text-dark);
   transition: all 0.3s ease, color 0.8s ease;
@@ -356,7 +356,7 @@
 
 @media(min-width: 768px) {
   .portal-name {
-    font-size: 12px;
+    font-size: 0.7rem;
   }
 
   #portal-limen {
@@ -364,7 +364,7 @@
   }
 
   .footer-text p {
-    font-size: 9px;
+    font-size: 0.6rem;
   }
 }
 
@@ -382,6 +382,6 @@
   }
 
   .portal-name {
-    font-size: 13px;
+    font-size: 0.95rem;
   }
 }
